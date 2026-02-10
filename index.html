@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>NengzX - iOS Certificate Manager</title>
+  
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://khoindvn.io.vn" crossorigin>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/ksign.png">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Animated Background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 50%, rgba(88, 86, 214, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(24, 243, 255, 0.15) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+      animation: gradientShift 8s ease-in-out infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header */
+    header {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      animation: slideDown 0.6s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #18f3ff, #5856d6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(24, 243, 255, 0.5)); }
+      50% { filter: drop-shadow(0 0 20px rgba(88, 86, 214, 0.8)); }
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #18f3ff, #5856d6);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .theme-toggle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .theme-toggle:hover {
+      border-color: rgba(24, 243, 255, 0.5);
+      background: rgba(24, 243, 255, 0.1);
+      transform: scale(1.1);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 6rem 2rem;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .hero-logo {
+      max-width: 150px;
+      height: auto;
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.8s ease-out;
+      filter: drop-shadow(0 0 10px rgba(24, 243, 255, 0.4));
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #18f3ff, #5856d6, #ff006e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: titleBounce 0.8s ease-out;
+    }
+
+    @keyframes titleBounce {
+      0% {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(24, 243, 255, 0.2), rgba(88, 86, 214, 0.2));
+      border: 1px solid rgba(24, 243, 255, 0.5);
+      color: #18f3ff;
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    /* Section Title */
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, #18f3ff, #5856d6);
+      margin: 1rem auto 0;
+      border-radius: 2px;
+    }
+
+    /* Download Cards */
+    .download-section {
+      margin: 4rem 0;
+    }
+
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .download-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(24, 243, 255, 0.3);
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .download-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(24, 243, 255, 0.1), transparent);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translate(-100%, -100%) rotate(45deg); }
+      100% { transform: translate(100%, 100%) rotate(45deg); }
+    }
+
+    .download-card:hover {
+      border-color: rgba(24, 243, 255, 0.8);
+      background: rgba(24, 243, 255, 0.15);
+      transform: translateY(-5px);
+    }
+
+    .download-card h4 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .download-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.7rem 1.5rem;
+      background: linear-gradient(135deg, #18f3ff, #5856d6);
+      color: #000;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .download-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 30px rgba(24, 243, 255, 0.5);
+    }
+
+    /* Apps Section */
+    .apps-section {
+      margin: 4rem 0;
+    }
+
+    .switch-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .switch-btn {
+      padding: 0.75rem 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .logo-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .switch-btn.active {
+      background: linear-gradient(135deg, #18f3ff, #5856d6);
+      border-color: transparent;
+      color: #000;
+      box-shadow: 0 10px 30px rgba(24, 243, 255, 0.4);
+    }
+
+    .switch-btn:hover:not(.active) {
+      border-color: rgba(24, 243, 255, 0.5);
+      background: rgba(24, 243, 255, 0.1);
+    }
+
+    .app-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .app-item {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .app-item:hover {
+      border-color: rgba(24, 243, 255, 0.5);
+      background: rgba(24, 243, 255, 0.1);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(24, 243, 255, 0.2);
+    }
+
+    .app-item img {
+      width: 80px;
+      height: 80px;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+      object-fit: cover;
+    }
+
+    .app-item h4 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .app-item p {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 1rem;
+    }
+
+    .install-btn {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      background: linear-gradient(135deg, #18f3ff, #5856d6);
+      color: #000;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+
+    .install-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(24, 243, 255, 0.4);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Skills Section */
+    .skills-section {
+      margin: 4rem 0;
+      padding: 3rem;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .skill-item {
+      margin-bottom: 2rem;
+    }
+
+    .skill-item label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .skill-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .skill-progress {
+      height: 100%;
+      background: linear-gradient(90deg, #18f3ff, #5856d6);
+      border-radius: 10px;
+      animation: fillProgressBar 1.5s ease-out both;
+    }
+
+    @keyframes fillProgressBar {
+      from {
+        width: 0%;
+      }
+      to {
+        width: var(--progress);
+      }
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 4rem;
+      animation: fadeInUp 1s ease-out 0.5s both;
+    }
+
+    footer p {
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-credit {
+      font-weight: 600;
+      color: #18f3ff;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      nav ul {
+        gap: 1rem;
+      }
+
+      nav a {
+        font-size: 0.85rem;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+      }
+    }
+
+    /* Loading animation */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Dark Theme */
+    html[data-theme="dark"] {
+      --bg-primary: #ffffff;
+      --bg-secondary: rgba(0, 0, 0, 0.05);
+      --bg-tertiary: rgba(0, 0, 0, 0.1);
+      --text-primary: #000000;
+      --text-secondary: rgba(0, 0, 0, 0.7);
+      --border-color: rgba(0, 0, 0, 0.2);
+      --accent-glow: rgba(0, 0, 0, 0.3);
+    }
+
+    html[data-theme="dark"] body {
+      background: linear-gradient(135deg, #f5f5f5, #e8e8e8, #f0f0f0);
+      color: #000000;
+    }
+
+    html[data-theme="dark"] body::before {
+      background: radial-gradient(circle at 20% 50%, rgba(0, 0, 0, 0.05) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.05) 0%, transparent 50%);
+    }
+
+    html[data-theme="dark"] header {
+      background: rgba(255, 255, 255, 0.9);
+      border-bottom-color: rgba(0, 0, 0, 0.15);
+    }
+
+    html[data-theme="dark"] .logo {
+      background: linear-gradient(135deg, #000000, #333333);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    html[data-theme="dark"] nav a {
+      color: #000000;
+    }
+
+    html[data-theme="dark"] nav a::after {
+      background: linear-gradient(90deg, #000000, #333333);
+    }
+
+    html[data-theme="dark"] .theme-toggle {
+      border-color: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.05);
+      color: #000000;
+    }
+
+    html[data-theme="dark"] .theme-toggle:hover {
+      border-color: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    html[data-theme="dark"] .hero h1 {
+      background: linear-gradient(135deg, #000000, #333333, #1a1a1a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    html[data-theme="dark"] .hero p {
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+    html[data-theme="dark"] .badge {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.15));
+      border-color: rgba(0, 0, 0, 0.3);
+      color: #000000;
+    }
+
+    html[data-theme="dark"] .section-title {
+      color: #000000;
+    }
+
+    html[data-theme="dark"] .section-title::after {
+      background: linear-gradient(90deg, #000000, #333333);
+    }
+
+    html[data-theme="dark"] .download-card {
+      background: rgba(255, 255, 255, 0.7);
+      border-color: rgba(0, 0, 0, 0.15);
+      color: #000000;
+    }
+
+    html[data-theme="dark"] .download-card:hover {
+      border-color: rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    html[data-theme="dark"] .download-card h4 {
+      color: #000000;
+    }
+
+    html[data-theme="dark"] .switch-btn {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.2);
+      color: #000000;
+    }
+
+    html[data-theme="dark"] .switch-btn.active {
+      background: linear-gradient(135deg, #000000, #333333);
+      border-color: transparent;
+      color: #ffffff;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    html[data-theme="dark"] .switch-btn:hover:not(.active) {
+      border-color: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    html[data-theme="dark"] .app-item {
+      background: rgba(255, 255, 255, 0.6);
+      border-color: rgba(0, 0, 0, 0.1);
+      color: #000000;
+    }
+
+    html[data-theme="dark"] .app-item:hover {
+      border-color: rgba(0, 0, 0, 0.25);
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    html[data-theme="dark"] .app-item h4 {
+      color: #000000;
+    }
+
+    html[data-theme="dark"] .app-item p {
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+    html[data-theme="dark"] .skills-section {
+      background: rgba(255, 255, 255, 0.6);
+      border-color: rgba(0, 0, 0, 0.1);
+      color: #000000;
+    }
+
+    html[data-theme="dark"] .skill-item label {
+      color: #000000;
+    }
+
+    html[data-theme="dark"] .skill-bar {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    html[data-theme="dark"] footer {
+      border-top-color: rgba(0, 0, 0, 0.1);
+      color: rgba(0, 0, 0, 0.7);
+    }
+
+    html[data-theme="dark"] footer p {
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+    html[data-theme="dark"] .footer-credit {
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">NengzX</div>
+      <ul>
+        <li><a href="#download">Download</a></li>
+        <li><a href="#apps">Applications</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <button class="theme-toggle" id="themeToggle">🌙</button>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <img src="https://i.ibb.co/nqbhypWw/Nengz-X.png" alt="NengzX Logo" class="hero-logo">
+      <h1>NengzX</h1>
+      <p>Premium iOS Certificate Management & Signing Services</p>
+      <p style="font-size: 1rem; color: rgba(255, 255, 255, 0.5);">100% Success Guarantee • Professional & Reliable</p>
+      <span class="badge">✨ Developer Portfolio</span>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download-section" id="download">
+      <h2 class="section-title">Download Resources</h2>
+      <div class="download-grid">
+        <div class="download-card">
+          <h4>🔐 ESign Certificate</h4>
+          <p>Enterprise signing certificate for iOS apps</p>
+          <a href="https://khoindvn.io.vn/document/DNS/ESignCert.zip" class="download-btn">Download</a>
+        </div>
+
+        <div class="download-card">
+          <h4>📡 DNS Profile</h4>
+          <p>Configure DNS settings for optimal performance</p>
+          <a href="https://github.com/Nyasami/getUDID-JS/releases/download/1.0.0/signed_khoindvn_fullchain.mobileconfig" class="download-btn">Download</a>
+        </div>
+
+        <div class="download-card">
+          <h4>📖 Installation Guide</h4>
+          <p>Step-by-step guide to sideload on iOS</p>
+          <a href="https://avieshek.wordpress.com/2024/06/11/how-to-sideload-on-ios/" class="download-btn" target="_blank">Read Guide</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Apps Section -->
+    <section class="apps-section" id="apps">
+      <h2 class="section-title">⚡ Signed Applications</h2>
+      <div class="switch-container">
+        <button class="switch-btn active" id="ksignBtn"><img src="https://i.ibb.co/ccmHX4dW/ksign.png" alt="KSign" class="logo-icon"> KSign</button>
+        <button class="switch-btn" id="esignBtn"><img src="https://i.ibb.co/WvjVZkrq/Esign.png" alt="ESign" class="logo-icon"> ESign</button>
+      </div>
+
+      <div class="app-list" id="ksignList"></div>
+      <div class="app-list hidden" id="esignList"></div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="skills-section" id="skills">
+      <h2 class="section-title">Technical Skills</h2>
+      <div class="skill-item">
+        <label>HTML/CSS</label>
+        <div class="skill-bar">
+          <div class="skill-progress" style="--progress: 85%; width: 85%;"></div>
+        </div>
+      </div>
+      <div class="skill-item">
+        <label>JavaScript</label>
+        <div class="skill-bar">
+          <div class="skill-progress" style="--progress: 75%; width: 75%;"></div>
+        </div>
+      </div>
+      <div class="skill-item">
+        <label>PHP & Backend</label>
+        <div class="skill-bar">
+          <div class="skill-progress" style="--progress: 70%; width: 70%;"></div>
+        </div>
+      </div>
+      <div class="skill-item">
+        <label>iOS Development</label>
+        <div class="skill-bar">
+          <div class="skill-progress" style="--progress: 88%; width: 88%;"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>📧 Contact: <strong>support@nengzx.dev</strong></p>
+    <p class="footer-credit">Developed by NengzX © 2026 | All Rights Reserved</p>
+  </footer>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" autoplay loop preload="auto">
+    <source src="https://audio.jukehost.co.uk/AnQDUbFlcApzliBaWuCtlSbwmr4rCFLy" type="audio/mpeg">
+  </audio>
+
+  <!-- Consolidated Script -->
+  <script>
+    // =========================
+    // APP DATA CONFIGURATION
+    // =========================
+    const KSIGN_LOGO = 'https://i.ibb.co/ccmHX4dW/ksign.png';
+    const ESIGN_LOGO = 'https://i.ibb.co/WvjVZkrq/Esign.png';
+
+    const ksignApps = [
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/03zH0o', img: KSIGN_LOGO, descriptions: 'PowerChina International Group Limited' },
+      { name: 'KSign PowerChina', url: 'https://api.khoindvn.io.vn/xuuKqO', img: KSIGN_LOGO, descriptions: 'PowerChina International Group Limited' },
+      { name: 'KSign PowerChina 1', url: 'https://api.khoindvn.io.vn/QdVVh3', img: KSIGN_LOGO, descriptions: 'PowerChina International Group Limited' },
+      { name: 'KSign PowerChina 2', url: 'https://api.khoindvn.io.vn/t1UK1D', img: KSIGN_LOGO, descriptions: 'PowerChina International Group Limited' },
+      { name: 'KSign PowerChina 3', url: 'https://api.khoindvn.io.vn/NU8PP6', img: KSIGN_LOGO, descriptions: 'PowerChina International Group Limited' },
+      { name: 'KSign', url: 'https://api.khoindvn.eu.org/XSCvQT', img: KSIGN_LOGO, descriptions: 'Qingdao Rural Commercial Bank Co., Ltd ' },
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/g65UJy', img: KSIGN_LOGO, descriptions: 'Commission on Elections ' },
+      { name: 'KSign Com V1', url: 'https://api.khoindvn.io.vn/ZsgCVX', img: KSIGN_LOGO, descriptions: 'Commission on Elections ' },
+      { name: 'KSign Com V2', url: 'https://api.khoindvn.io.vn/VNNlkL', img: KSIGN_LOGO, descriptions: 'Commission on Elections ' },
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/9VDZ4Y', img: KSIGN_LOGO, descriptions: 'Wasu Media & Network Co' },
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/h5YrG1', img: KSIGN_LOGO, descriptions: 'Luoyang Postal Administration' },
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/TsTFIu', img: KSIGN_LOGO, descriptions: 'Etisalat - Emirates Telecommunications Corporation' },
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/IUurbX', img: KSIGN_LOGO, descriptions: 'China National Heavy Duty Truck Group Co., Ltd' },
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/5PBonm', img: KSIGN_LOGO, descriptions: 'China Telecommunications Corporation' },
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/1H9iee', img: KSIGN_LOGO, descriptions: 'Tianjin University of Commerce' },
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/qYiNnB', img: KSIGN_LOGO, descriptions: 'VIETTEL GROUP' },
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/xwgru5', img: KSIGN_LOGO, descriptions: 'CHIBA INSTITUTE OF TECHNOLOGY' },
+      { name: 'KSign ChiBa V1', url: 'https://api.khoindvn.io.vn/KYD1nK', img: KSIGN_LOGO, descriptions: 'CHIBA INSTITUTE OF TECHNOLOGY' },
+      { name: 'KSign ChiBa V2', url: 'https://api.khoindvn.io.vn/EIpxft', img: KSIGN_LOGO, descriptions: 'CHIBA INSTITUTE OF TECHNOLOGY' },
+      { name: 'KSign ChiBa V3', url: 'https://api.khoindvn.io.vn/ZNciX8', img: KSIGN_LOGO, descriptions: 'CHIBA INSTITUTE OF TECHNOLOGY' },
+      { name: 'KSign ChiBa V4', url: 'https://api.khoindvn.io.vn/nBQF8h', img: KSIGN_LOGO, descriptions: 'CHIBA INSTITUTE OF TECHNOLOGY' },
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/5dujHz', img: KSIGN_LOGO, descriptions: 'VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE' },
+      { name: 'KSign VN V1', url: 'https://api.khoindvn.io.vn/hZ8MlI', img: KSIGN_LOGO, descriptions: 'VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE' },
+      { name: 'KSign VN V2', url: 'https://api.khoindvn.io.vn/Fdty3X', img: KSIGN_LOGO, descriptions: 'VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE' },
+      { name: 'KSign VN V3', url: 'https://api.khoindvn.io.vn/AK7usE', img: KSIGN_LOGO, descriptions: 'VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE' },
+      { name: 'KSign VN V4', url: 'https://api.khoindvn.io.vn/oIV0oN', img: KSIGN_LOGO, descriptions: 'VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE' },
+      { name: 'KSign', url: 'https://api.khoindvn.io.vn/6DNLtD', img: KSIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'KSign GLOBAL V1', url: 'https://api.khoindvn.io.vn/j7XAya', img: KSIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'KSign GLOBAL V2', url: 'https://api.khoindvn.io.vn/qNkRtG', img: KSIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'KSign GLOBAL V3', url: 'https://api.khoindvn.io.vn/mTt9ip', img: KSIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'KSign GLOBAL V4', url: 'https://api.khoindvn.io.vn/RX7IAf', img: KSIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'KSign GLOBAL V5', url: 'https://api.khoindvn.io.vn/tGeKc0', img: KSIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'KSign GLOBAL V6', url: 'https://api.khoindvn.io.vn/Deq7RD', img: KSIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'KSign GLOBAL V7', url: 'https://api.khoindvn.io.vn/kcvpWe', img: KSIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' }
+    ];
+
+    const esignApps = [
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/IDcW4P', img: ESIGN_LOGO, descriptions: 'PowerChina International Group Limited' },
+      { name: 'ESign PowerChina', url: 'https://api.khoindvn.io.vn/NvH0ZF', img: ESIGN_LOGO, descriptions: 'PowerChina International Group Limited' },
+      { name: 'ESign PowerChina 1', url: 'https://api.khoindvn.io.vn/GKJa03', img: ESIGN_LOGO, descriptions: 'PowerChina International Group Limited' },
+      { name: 'ESign PowerChina 2', url: 'https://api.khoindvn.io.vn/lYSU81', img: ESIGN_LOGO, descriptions: 'PowerChina International Group Limited' },
+      { name: 'ESign PowerChina 3', url: 'https://api.khoindvn.io.vn/bzAdnw', img: ESIGN_LOGO, descriptions: 'PowerChina International Group Limited' },
+      { name: 'ESign', url: 'https://api.khoindvn.eu.org/KXcveB', img: ESIGN_LOGO, descriptions: 'Qingdao Rural Commercial Bank Co., Ltd ' },
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/jAbzrt', img: ESIGN_LOGO, descriptions: 'Commission on Elections' },
+      { name: 'ESign Com V1', url: 'https://api.khoindvn.io.vn/RzkRFk', img: ESIGN_LOGO, descriptions: 'Commission on Elections' },
+      { name: 'ESign Com V2', url: 'https://api.khoindvn.io.vn/oC0s5H', img: ESIGN_LOGO, descriptions: 'Commission on Elections' },
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/ST2vo0', img: ESIGN_LOGO, descriptions: 'Luoyang Postal Administration' },
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/CbhJOR', img: ESIGN_LOGO, descriptions: 'Wasu Media & Network Co., Ltd' },
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/Zxycmb', img: ESIGN_LOGO, descriptions: 'Etisalat - Emirates Telecommunications Corporation' },
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/11jtJ7', img: ESIGN_LOGO, descriptions: 'China National Heavy Duty Truck Group Co., Ltd.' },
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/JJW6Nj', img: ESIGN_LOGO, descriptions: 'China Telecommunications Corporation' },
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/6xAzUM', img: ESIGN_LOGO, descriptions: 'Tianjin University of Commerce' },
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/Sco2A2', img: ESIGN_LOGO, descriptions: 'VIETTEL GROUP' },
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/Q9sxJb', img: ESIGN_LOGO, descriptions: 'CHIBA INSTITUTE OF TECHNOLOGY' },
+      { name: 'ESign ChiBa V1', url: 'https://api.khoindvn.io.vn/Bhqw0c', img: ESIGN_LOGO, descriptions: 'CHIBA INSTITUTE OF TECHNOLOGY' },
+      { name: 'ESign ChiBa V2', url: 'https://api.khoindvn.io.vn/9UqTrd', img: ESIGN_LOGO, descriptions: 'CHIBA INSTITUTE OF TECHNOLOGY' },
+      { name: 'ESign ChiBa V3', url: 'https://api.khoindvn.io.vn/BcUSW0', img: ESIGN_LOGO, descriptions: 'CHIBA INSTITUTE OF TECHNOLOGY' },
+      { name: 'ESign ChiBa V4', url: 'https://api.khoindvn.io.vn/4jftNL', img: ESIGN_LOGO, descriptions: 'CHIBA INSTITUTE OF TECHNOLOGY' },
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/z4nsG3', img: ESIGN_LOGO, descriptions: 'VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE' },
+      { name: 'ESign VN V1', url: 'https://api.khoindvn.io.vn/hMU3PR', img: ESIGN_LOGO, descriptions: 'VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE' },
+      { name: 'ESign VN V2', url: 'https://api.khoindvn.io.vn/OBr8Zi', img: ESIGN_LOGO, descriptions: 'VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE' },
+      { name: 'ESign VN V3', url: 'https://api.khoindvn.io.vn/gegf9d', img: ESIGN_LOGO, descriptions: 'VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE' },
+      { name: 'ESign VN V4', url: 'https://api.khoindvn.io.vn/a1Gr0d', img: ESIGN_LOGO, descriptions: 'VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE' },
+      { name: 'ESign', url: 'https://api.khoindvn.io.vn/2nf4UO', img: ESIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'ESign GlOBAL V1', url: 'https://api.khoindvn.io.vn/j6HQG8', img: ESIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'ESign GlOBAL V2', url: 'https://api.khoindvn.io.vn/hvcTb2', img: ESIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'ESign GlOBAL V3', url: 'https://api.khoindvn.io.vn/bJV2fn', img: ESIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'ESign GlOBAL V4', url: 'https://api.khoindvn.io.vn/QQYC0K', img: ESIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'ESign GlOBAL V5', url: 'https://api.khoindvn.io.vn/ylpuYQ', img: ESIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'ESign GlOBAL V6', url: 'https://api.khoindvn.io.vn/vnAa35', img: ESIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' },
+      { name: 'ESign GlOBAL V7', url: 'https://api.khoindvn.io.vn/qYW0nK', img: ESIGN_LOGO, descriptions: 'GLOBAL TAKEOFF, INC' }
+    ];
+
+    // =========================
+    // INITIALIZATION
+    // =========================
+    document.addEventListener('DOMContentLoaded', () => {
+      const themeToggle = document.getElementById('themeToggle');
+      const bgMusic = document.getElementById('bgMusic');
+      const ksignBtn = document.getElementById('ksignBtn');
+      const esignBtn = document.getElementById('esignBtn');
+      const ksignList = document.getElementById('ksignList');
+      const esignList = document.getElementById('esignList');
+
+      // Load theme preference
+      const isDark = localStorage.getItem('theme') === 'dark';
+      if (isDark) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙';
+      }
+
+      // Theme Toggle
+      themeToggle.addEventListener('click', () => {
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDarkMode) {
+          document.documentElement.removeAttribute('data-theme');
+          localStorage.setItem('theme', 'light');
+          themeToggle.textContent = '🌙';
+        } else {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+          themeToggle.textContent = '☀️';
+        }
+      });
+
+      // Auto-play background music with fallback
+      if (bgMusic) {
+        bgMusic.volume = 0.3;
+        bgMusic.play().catch(() => {
+          console.log('Audio autoplay blocked by browser. Click anywhere to start.');
+        });
+      }
+
+      // Populate app lists
+      ksignList.innerHTML = ksignApps.map(renderAppItem).join('');
+      esignList.innerHTML = esignApps.map(renderAppItem).join('');
+
+      // Tab switching
+      ksignBtn.onclick = () => switchTab('ksign');
+      esignBtn.onclick = () => switchTab('esign');
+
+      // Smooth scroll
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+    });
+
+    function renderAppItem(item) {
+      return `
+        <div class="app-item">
+          <img src="${item.img}" alt="${item.name}" onerror="this.src='images/favicon.ico'">
+          <h4>${item.name}</h4>
+          <p>${item.descriptions}</p>
+          <a href="${item.url}" class="install-btn" target="_blank" rel="noopener">Install</a>
+        </div>
+      `;
+    }
+
+    function switchTab(tab) {
+      const ksignBtn = document.getElementById('ksignBtn');
+      const esignBtn = document.getElementById('esignBtn');
+      const ksignList = document.getElementById('ksignList');
+      const esignList = document.getElementById('esignList');
+
+      document.querySelectorAll('.switch-btn').forEach(btn => btn.classList.remove('active'));
+      ksignList.classList.add('hidden');
+      esignList.classList.add('hidden');
+
+      if (tab === 'ksign') {
+        ksignBtn.classList.add('active');
+        ksignList.classList.remove('hidden');
+      } else if (tab === 'esign') {
+        esignBtn.classList.add('active');
+        esignList.classList.remove('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
