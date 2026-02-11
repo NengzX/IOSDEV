@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>NengzX - iOS Certificate Manager</title>
+  <title>NengzX - iOS DEV </title>
   
   <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,6 +91,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    /* Mobile nav toggle */
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.6rem;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
     }
 
     .logo {
@@ -498,27 +509,49 @@
     }
 
     /* Responsive */
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 2.5rem;
-      }
-
-      nav ul {
-        gap: 1rem;
-      }
-
-      nav a {
-        font-size: 0.85rem;
-      }
-
-      .services-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .section-title {
-        font-size: 1.8rem;
-      }
+    /* Large screens */
+    @media (min-width: 1200px) {
+      main { max-width: 1400px; padding: 3rem; }
+      .hero { padding: 8rem 3rem; }
+      .hero h1 { font-size: 4.8rem; }
+      .download-grid { grid-template-columns: repeat(3, 1fr); }
+      .app-list { grid-template-columns: repeat(4, minmax(220px, 1fr)); }
     }
+
+    /* Tablets and small laptops */
+    @media (max-width: 1199px) and (min-width: 769px) {
+      main { padding: 2rem; }
+      .hero { padding: 6rem 2rem; }
+      .hero h1 { font-size: 3.5rem; }
+      .download-grid { grid-template-columns: repeat(2, 1fr); }
+      .app-list { grid-template-columns: repeat(3, minmax(200px, 1fr)); }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      nav { position: relative; }
+      .nav-toggle { display: block; }
+      nav ul { display: none; position: absolute; right: 1rem; top: 64px; background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.75rem 1rem; flex-direction: column; gap: 0.8rem; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+      nav.open ul { display: flex; }
+
+      main { padding: 1rem; }
+      .hero { padding: 3rem 1rem; }
+      .hero-logo { max-width: 120px; }
+      .hero h1 { font-size: 2rem; }
+      .logo { font-size: 1.4rem; }
+      nav ul { gap: 0.6rem; }
+      nav a { font-size: 0.85rem; }
+      .theme-toggle { width: 42px; height: 42px; font-size: 1rem; }
+      .download-grid { grid-template-columns: 1fr; }
+      .app-list { grid-template-columns: 1fr; }
+      .app-item { padding: 1rem; }
+      .app-item img { width: 64px; height: 64px; margin-bottom: 0.6rem; }
+      .section-title { font-size: 1.6rem; }
+    }
+
+    /* Misc responsive improvements */
+    .app-item img { max-width: 100%; height: auto; display: block; margin-left: auto; margin-right: auto; }
+    .app-list { gap: 1rem; }
 
     /* Loading animation */
     @keyframes pulse {
@@ -687,6 +720,7 @@
   <header>
     <nav>
       <div class="logo">NengzX</div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
       <ul>
         <li><a href="#download">Download</a></li>
         <li><a href="#apps">Applications</a></li>
@@ -719,7 +753,7 @@
         <div class="download-card">
           <h4>📡 DNS Profile</h4>
           <p>Configure DNS settings for optimal performance</p>
-          <a href="https://github.com/Nyasami/getUDID-JS/releases/download/1.0.0/signed_khoindvn_fullchain.mobileconfig" class="download-btn">Download</a>
+          <a href="https://github.com/NengzX/IOSDEV/releases/download/v1.0.0/nengzx-full-chian-config.mobileconfig" class="download-btn">Download</a>
         </div>
 
         <div class="download-card">
@@ -925,6 +959,15 @@
           }
         });
       });
+
+      // Mobile nav toggle
+      const navToggle = document.getElementById('navToggle');
+      const navEl = document.querySelector('nav');
+      if (navToggle && navEl) {
+        navToggle.addEventListener('click', () => {
+          navEl.classList.toggle('open');
+        });
+      }
     });
 
     function renderAppItem(item) {
